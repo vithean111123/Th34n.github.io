@@ -177,20 +177,16 @@
 
     .icon { margin-right: 2px; color: #00ff41; }
 
-    /* Corner info */
-    .corner {
-      position: fixed;
+    /* Corner info inline */
+    .corner-inline {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
+      font-size: 11px;
       color: #00ff41;
-      opacity: 0.4;
-      text-shadow: 0 0 5px #00ff41;
-      line-height: 1.7;
-      pointer-events: none;
-      z-index: 5;
+      opacity: 0.6;
+      text-shadow: 0 0 6px #00ff41;
+      line-height: 1.8;
+      text-align: center;
     }
-    .corner.tl { top: 14px; left: 16px; }
-    .corner.tr { top: 14px; right: 16px; text-align: right; }
 
     @media (max-width: 600px) {
       h1 { font-size: 1.8rem; }
@@ -205,10 +201,6 @@
 
   <canvas id="matrix-bg"></canvas>
   <div class="scanlines"></div>
-
-  <!-- Corner decorations -->
-  <div class="corner tl" id="c-tl"></div>
-  <div class="corner tr" id="c-tr"></div>
 
   <!-- Page Content -->
   <div class="content">
@@ -231,6 +223,12 @@
           </ul>
         </div>
       </fieldset>
+    </div>
+
+    <!-- Corner stats below fieldset -->
+    <div style="margin-top: 24px; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+      <div class="corner-inline" id="c-tl"></div>
+      <div class="corner-inline" id="c-tr"></div>
     </div>
   </div>
 
