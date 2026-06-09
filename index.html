@@ -5,198 +5,292 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thea Vithean</title>
   <link rel="icon" href="Thea Vithean.jpg" type="image/x-icon">
-  <!-- FIXED WORKING FONT AWESOME -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
     }
-    .video-bg {
+
+    /* Matrix canvas background */
+    #matrix-bg {
       position: fixed;
-      top: 0;
-      left: 0;
-      backdrop-filter: blur(20px);
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -2;
+      background: #000;
+    }
+
+    /* Scanlines overlay */
+    .scanlines {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: -1;
-    }
-    .video-bg iframe {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 120vw;
-      height: 120vh;
-      transform: translate(-50%, -50%);
       pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.12) 3px,
+        rgba(0,0,0,0.12) 4px
+      );
     }
+
     .content {
       position: relative;
       z-index: 1;
       text-align: center;
       color: white;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.55);
       min-height: 100vh;
-      padding: 50px 20px;
+      padding: 40px 20px;
       box-sizing: border-box;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(2px);
+      overflow-y: auto;
     }
+
+    h1 {
+      font-family: Impact, 'Arial Narrow Bold', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.06em;
+      text-shadow: 0 0 18px rgba(220,20,60,0.7), 0 0 40px rgba(0,255,65,0.18);
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      font-family: cursive;
+      font-size: 1.1rem;
+      margin-top: 0;
+      text-shadow: 0 0 10px rgba(220,20,60,0.5);
+    }
+
     .profile-img {
       width: 200px;
       height: 200px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid white;
-      margin: 20px 0;
+      border: 3px solid #00ff41;
+      box-shadow: 0 0 18px #00ff41, 0 0 40px rgba(0,255,65,0.3);
+      margin: 18px 0;
+      transition: box-shadow 0.4s;
     }
-    .icon {
-      margin-right: 5px;
+    .profile-img:hover {
+      box-shadow: 0 0 30px #00ff41, 0 0 70px rgba(0,255,65,0.5);
     }
 
-    .link ul li a {
+    fieldset {
+      width: 300px;
+      margin: auto;
+      border: 1.5px solid #00ff41;
+      padding: 12px 16px;
       display: flex;
-      flex-direction: row;
-      align-items: self-start;
-      padding: 5px;
+      flex-direction: column;
+      box-shadow: 0 0 12px rgba(0,255,65,0.25), inset 0 0 20px rgba(0,0,0,0.4);
+      border-radius: 4px;
+    }
+
+    legend {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: #00ff41;
+      text-shadow: 0 0 8px #00ff41;
+      text-transform: uppercase;
+      padding: 0 8px;
     }
 
     ul {
       display: flex;
       flex-direction: column;
+      padding: 0;
+      margin: 0;
     }
 
     li {
       list-style: none;
-        margin: 4px 0;
-        display: flex;
+      margin: 3px 0;
+      display: flex;
     }
 
     ul li a {
-      color: #fff;
-      font-size: 1.1rem;
+      color: #d4ffd4;
+      font-size: 1rem;
       display: flex;
       text-decoration: none;
       gap: 10px;
-      padding: 0.4rem 1rem;
-      font-family: cursive;
-      margin: 0 10px;
+      padding: 0.35rem 0.8rem;
+      font-family: 'Share Tech Mono', monospace;
       position: relative;
-      transition: all 0.5s;
+      transition: all 0.3s;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    ul li a:hover {
+      color: #00ff41;
+      text-shadow: 0 0 10px #00ff41;
+    }
+
+    .list-items {
+      position: relative;
     }
 
     .list-items:before {
       content: "";
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      width: 12px;
-      height: 12px;
-      border: 3px solid white;
-      border-width: 0 0 3px 3px;
+      bottom: 8px;
+      left: 8px;
+      width: 10px;
+      height: 10px;
+      border: 2px solid #00ff41;
+      border-width: 0 0 2px 2px;
       opacity: 0;
-      transition: all 0.6s;
+      transition: all 0.4s;
     }
-
     .list-items:hover:before {
       opacity: 1;
-      bottom: -8px;
-      left: -8px;
+      bottom: -6px;
+      left: -6px;
     }
 
     .list-items:after {
       content: "";
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 12px;
-      height: 12px;
-      border: 3px solid white;
-      border-width: 3px 3px 0 0;
+      top: 0; right: 0;
+      width: 10px;
+      height: 10px;
+      border: 2px solid #00ff41;
+      border-width: 2px 2px 0 0;
       opacity: 0;
-      transition: all 0.6s;
+      transition: all 0.4s;
     }
-
     .list-items:hover:after {
-        width: 12px;
       opacity: 1;
-      top: -8px;
-      right: -8px;
+      top: -6px;
+      right: -6px;
     }
-    
-    /* MOBILE RESPONSIVE DESIGN */
-@media (max-width: 600px) {
-  .video-bg iframe {
-    width: 200vh;  /* more width for tall screens */
-    height: 100vh;
-  }
-  
-  .content {
-    padding: 10px 10px;
-    align-item:center;
-  }
 
-  .profile-img {
-    width: 150px;
-    height: 150px;
-  }
+    .icon { margin-right: 2px; color: #00ff41; }
 
-  fieldset {
-    width: 50%;
-    height: auto;
-  }
-  li{
-    font-size: 0.9rem;
-    margin: 0.5px 0;
-  }
-}
+    /* Corner info */
+    .corner {
+      position: fixed;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: #00ff41;
+      opacity: 0.4;
+      text-shadow: 0 0 5px #00ff41;
+      line-height: 1.7;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .corner.tl { top: 14px; left: 16px; }
+    .corner.tr { top: 14px; right: 16px; text-align: right; }
 
-
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .profile-img { width: 140px; height: 140px; }
+      fieldset { width: 85%; }
+      ul li a { font-size: 0.88rem; }
+      .corner { display: none; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Background Video -->
-  <div class="video-bg">
-    <iframe 
-      src="https://www.youtube.com/embed/9LDcK17EAWw?autoplay=1&mute=1&controls=0&showinfo=0&loop=1&playlist=9LDcK17EAWw&modestbranding=1&playsinline=1" 
-      frameborder="0"
-      allow="autoplay; fullscreen"
-      allowfullscreen>
-    </iframe>
-  </div>
+  <canvas id="matrix-bg"></canvas>
+  <div class="scanlines"></div>
+
+  <!-- Corner decorations -->
+  <div class="corner tl" id="c-tl"></div>
+  <div class="corner tr" id="c-tr"></div>
 
   <!-- Page Content -->
   <div class="content">
-    <h1 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Thea <span style="color: crimson;">Vithean</span></h1>
-    <h2 style="font-family: cursive;">........ <span style="color: crimson;">Developer</span></h2>
+    <h1>Thea <span style="color: crimson;">Vithean</span></h1>
+    <h2>........ <span style="color: crimson;">Developer</span></h2>
     <img src="Thea Vithean.jpg" alt="Profile Picture" class="profile-img">
 
     <div class="content-1">
-      <fieldset style="width: 300px; margin: auto; border: 2px solid white; padding: 10px; display: flex; flex-direction: column;">
-        <legend style="font-family: 'Arial Black', Gadget, sans-serif;">Contact ME</legend>
-
-        <div class="link list-items">
+      <fieldset>
+        <legend>Contact ME</legend>
+        <div class="link">
           <ul>
-            <li><a href="https://www.facebook.com/share/17ZZv4FaU1/" class="list-items"><i class="fab fa-facebook icon"></i> : Facebook</a></li>
-            <li><a href="theavithean939@gmail.com" class="list-items"><i class="fa-solid fa-envelope icon"></i> : Email</a></li>
-            <li><a href="https://x.com/Vithean37763" class="list-items"><i class="fa-brands fa-x-twitter icon"></i> : X</a></li>
-            <li><a href="https://wa.me/855977625939" class="list-items"><i class="fa-brands fa-whatsapp icon"></i> : What app</a></li>
-            <li><a href="" class="list-items"><i class="fa-brands fa-weixin icon"></i> : WeChat</a></li>
-            <li><a href="https://t.me/theavithean" class="list-items"><i class="fa-brands fa-telegram icon"></i> : Telegram</a></li>
-            <li><a href="" class="list-items"><i class="fa-solid fa-phone icon"></i> : +855 977-625-939</a></li>
+            <li><a href="https://www.facebook.com/share/17ZZv4FaU1/" class="list-items"><i class="fab fa-facebook icon"></i> Facebook</a></li>
+            <li><a href="mailto:theavithean939@gmail.com" class="list-items"><i class="fa-solid fa-envelope icon"></i> Email</a></li>
+            <li><a href="https://x.com/Vithean37763" class="list-items"><i class="fa-brands fa-x-twitter icon"></i> X</a></li>
+            <li><a href="https://wa.me/855977625939" class="list-items"><i class="fa-brands fa-whatsapp icon"></i> WhatsApp</a></li>
+            <li><a href="#" class="list-items"><i class="fa-brands fa-weixin icon"></i> WeChat</a></li>
+            <li><a href="https://t.me/theavithean" class="list-items"><i class="fa-brands fa-telegram icon"></i> Telegram</a></li>
+            <li><a href="tel:+855977625939" class="list-items"><i class="fa-solid fa-phone icon"></i> +855 977-625-939</a></li>
           </ul>
         </div>
-
       </fieldset>
     </div>
   </div>
 
+  <script>
+    // ── Matrix Rain ──────────────────────────────────────────
+    const canvas = document.getElementById('matrix-bg');
+    const ctx = canvas.getContext('2d');
+    const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*<>{}[]|\\/:;';
+    const FS = 14;
+    let cols, drops;
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols  = Math.floor(canvas.width / FS);
+      drops = Array(cols).fill(1).map(() => Math.random() * -80);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0,0,0,0.045)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = FS + 'px "Share Tech Mono", monospace';
+
+      for (let i = 0; i < cols; i++) {
+        const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+        const y  = drops[i] * FS;
+
+        // Bright head
+        if (Math.random() < 0.04) {
+          ctx.fillStyle = '#ccffdd';
+          ctx.shadowColor = '#00ff41';
+          ctx.shadowBlur  = 12;
+        } else {
+          ctx.fillStyle = `rgba(0,${180 + Math.random()*75|0},55,${0.5 + Math.random()*0.5})`;
+          ctx.shadowBlur = 0;
+        }
+        ctx.fillText(ch, i * FS, y);
+        ctx.shadowBlur = 0;
+
+        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.45 + Math.random() * 0.45;
+      }
+    }
+    setInterval(drawMatrix, 40);
+
+    // ── Live corner stats ─────────────────────────────────────
+    function p(n) { return String(n).padStart(2,'0'); }
+    function r(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+    function updateCorners() {
+      const now = new Date();
+      const ts   = `${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
+      const date = `${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}`;
+      document.getElementById('c-tl').innerHTML = `SYS // ${date}<br>${ts} ICT`;
+      document.getElementById('c-tr').innerHTML = `ENC: AES-256<br>NET: ↑${r(1,99)}KB/s`;
+    }
+    setInterval(updateCorners, 1000);
+    updateCorners();
+  </script>
 </body>
 </html>
-
-
-
